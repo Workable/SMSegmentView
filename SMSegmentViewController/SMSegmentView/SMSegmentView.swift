@@ -30,7 +30,7 @@ open class SMSegmentView: UIControl {
                 return segment.index
             }
             else {
-                return UISegmentedControl.noSegment
+                return UISegmentedControl.UISegmentedControlNoSegment
             }
         }
         set(newIndex) {
@@ -159,7 +159,7 @@ open class SMSegmentView: UIControl {
         assert(index >= 0 && index < self.segments.count, "Index (\(index)) is out of range")
         
         if index == self.selectedSegmentIndex {
-            self.selectedSegmentIndex = UISegmentedControl.noSegment
+            self.selectedSegmentIndex = UISegmentedControl.UISegmentedControlNoSegment
         }
         self.resetSegmentIndicesWithIndex(index, by: -1)
         let segment = self.segments.remove(at: index)
