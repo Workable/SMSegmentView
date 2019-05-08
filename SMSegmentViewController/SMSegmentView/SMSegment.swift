@@ -84,30 +84,53 @@ open class SMSegment: UIView {
         }
         
         if case .horizontal = stackMode {
-            var imageViewFrame = CGRect(x: 0.0, y: verticalMargin, width: 0.0, height: self.frame.size.height - verticalMargin*2)
+            var imageViewFullFrame = CGRect(x: 0.0, y: verticalMargin, width: 0.0, height: self.frame.size.height - verticalMargin*2)
             if self.onSelectionImage != nil || self.offSelectionImage != nil {
                 // Set imageView as a square
-                imageViewFrame.size.width = self.frame.size.height - verticalMargin*2
+                imageViewFullFrame.size.width = self.frame.size.height - verticalMargin*2
                 distanceBetween = 5.0
             }
+            
+            let imageViewIdealSize = imageView.intrinsicContentSize
+            var imageViewFrame = imageViewFullFrame
+            
+            imageViewFrame.size = imageViewIdealSize
+            
+            let verticalOffsetNeeded = (imageViewFullFrame.size.height - imageViewIdealSize.height) / 2
+            let horizontalOffsetNeeded = (imageViewFullFrame.size.width - imageViewIdealSize.width) / 2
+            
+            imageViewFrame.origin.y += verticalOffsetNeeded
+            imageViewFrame.origin.x += horizontalOffsetNeeded
             
             // If there's no text, align image in the centre
             // Otherwise align text & image in the centre
             self.label.sizeToFit()
             if self.label.frame.size.width == 0.0 {
-                imageViewFrame.origin.x = max((self.frame.size.width - imageViewFrame.size.width) / 2.0, 0.0)
+                imageViewFullFrame.origin.x = max((self.frame.size.width - imageViewFullFrame.size.width) / 2.0, 0.0)
             }
             else {
-                imageViewFrame.origin.x = max((self.frame.size.width - imageViewFrame.size.width - self.label.frame.size.width) / 2.0 - distanceBetween, 0.0)
+                imageViewFullFrame.origin.x = max((self.frame.size.width - imageViewFullFrame.size.width - self.label.frame.size.width) / 2.0 - distanceBetween, 0.0)
             }
             
-            self.imageView.frame = imageViewFrame
-            self.label.frame = CGRect(x: imageViewFrame.origin.x + imageViewFrame.size.width + distanceBetween, y: verticalMargin, width: self.label.frame.size.width, height: self.frame.size.height - verticalMargin * 2)
+            self.imageView.frame = imageViewFullFrame
+            self.label.frame = CGRect(x: imageViewFullFrame.origin.x + imageViewFullFrame.size.width + distanceBetween, y: verticalMargin, width: self.label.frame.size.width, height: self.frame.size.height - verticalMargin * 2)
         } else {
             distanceBetween = 5.0
             label.sizeToFit()
             let imageViewHeight = frame.size.height - 2.0 * verticalMargin - label.frame.size.height
-            let imageViewFrame = CGRect(x: frame.size.width/2.0 - imageViewHeight/2.0, y: verticalMargin, width: imageViewHeight, height: imageViewHeight)
+            let imageViewFullFrame = CGRect(x: frame.size.width/2.0 - imageViewHeight/2.0, y: verticalMargin, width: imageViewHeight, height: imageViewHeight)
+            
+            let imageViewIdealSize = imageView.intrinsicContentSize
+            var imageViewFrame = imageViewFullFrame
+            
+            imageViewFrame.size = imageViewIdealSize
+            
+            let verticalOffsetNeeded = (imageViewFullFrame.size.height - imageViewIdealSize.height) / 2
+            let horizontalOffsetNeeded = (imageViewFullFrame.size.width - imageViewIdealSize.width) / 2
+            
+            imageViewFrame.origin.y += verticalOffsetNeeded
+            imageViewFrame.origin.x += horizontalOffsetNeeded
+            
             imageView.frame = imageViewFrame
             label.frame = CGRect(x: 0, y: imageViewHeight + verticalMargin + distanceBetween, width: frame.size.width, height: label.frame.size.height)
         }
