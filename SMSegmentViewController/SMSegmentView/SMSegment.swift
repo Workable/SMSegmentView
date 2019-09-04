@@ -51,7 +51,7 @@ open class SMSegment: UIView {
     
     fileprivate func addUIElementsToView() {
         
-        self.imageView.contentMode = UIViewContentMode.scaleAspectFit
+        self.imageView.contentMode = UIView.ContentMode.scaleAspectFit
         self.addSubview(self.imageView)
         
         self.label.textAlignment = NSTextAlignment.center
