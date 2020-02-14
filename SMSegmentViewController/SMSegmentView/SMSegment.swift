@@ -169,8 +169,6 @@ open class SMSegment: UIView {
     }
     
     override open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if self.isSelected == false {
             self.didSelectSegment?(self)
-        }
     }
 }

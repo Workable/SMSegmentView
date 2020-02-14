@@ -11,6 +11,7 @@ import UIKit
 open class SMSegmentView: UIControl {
 
     open var segmentAppearance: SMSegmentAppearance?
+    public var allowsDeselection: Bool = false
 
     // Divider colour & width
     open var dividerColour: UIColor = UIColor.lightGray {
@@ -34,10 +35,13 @@ open class SMSegmentView: UIControl {
             }
         }
         set(newIndex) {
-            self.deselectSegment()
+            self.deselectSegment(setSelectedIndexUnkown: false)
             if newIndex >= 0 && newIndex < self.segments.count {
                 let currentSelectedSegment = self.segments[newIndex]
                 self.selectSegment(currentSelectedSegment)
+            } else {
+                // select no segment
+                self.selectNoSegment()
             }
         }
     }
@@ -103,9 +107,17 @@ open class SMSegmentView: UIControl {
         self.selectedSegment = segment
         self.sendActions(for: .valueChanged)
     }
-    fileprivate func deselectSegment() {
+    
+    fileprivate func selectNoSegment() {
+        self.sendActions(for: .valueChanged)
+    }
+    
+    fileprivate func deselectSegment(setSelectedIndexUnkown: Bool = false) {
         self.selectedSegment?.setSelected(false)
         self.selectedSegment = nil
+        if setSelectedIndexUnkown {
+            self.selectedSegmentIndex = UISegmentedControl.noSegment
+        }
     }
 
     // MARK: Add Segment
@@ -117,9 +129,12 @@ open class SMSegmentView: UIControl {
         let index = self.segments.count
         segment.index = index
         segment.didSelectSegment = { [weak self] segment in
-            if self!.selectedSegment != segment {
-                self!.deselectSegment()
-                self!.selectSegment(segment)
+            guard let strongSelf = self else { return }
+            if strongSelf.selectedSegment != segment {
+                strongSelf.deselectSegment()
+                strongSelf.selectSegment(segment)
+            } else if strongSelf.allowsDeselection {
+                strongSelf.deselectSegment(setSelectedIndexUnkown: true)
             }
         }
         segment.setupUIElements()
@@ -140,10 +155,14 @@ open class SMSegmentView: UIControl {
         segment.offSelectionImage = offSelectionImage
         segment.index = index
         segment.didSelectSegment = { [weak self] segment in
-            if self!.selectedSegment != segment {
-                self!.deselectSegment()
-                self!.selectSegment(segment)
+            guard let strongSelf = self else { return }
+            if strongSelf.selectedSegment != segment {
+                strongSelf.deselectSegment()
+                strongSelf.selectSegment(segment)
+            } else if strongSelf.allowsDeselection {
+                strongSelf.deselectSegment(setSelectedIndexUnkown: true)
             }
+            
         }
         segment.setupUIElements()
         
