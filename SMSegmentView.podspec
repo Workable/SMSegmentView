@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/allenbryan11/SMSegmentView.git", :branch => "master" }
 
 
-  s.source_files  = "SMSegmentViewController/SMSegmentView/*.swift"
+  s.source_files  = "Sources/SMSegmentView/*.swift"
   s.requires_arc = true
   s.frameworks = 'UIKit'
 
